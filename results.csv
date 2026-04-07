@@ -1,0 +1,16 @@
+2026-04-22_22-58-46
+program,N,elapsed_seconds
+build/cpp11_ufloat32,1000000000,3.654645
+build/cpp11_ufloat64,1000000000,8.910049
+build/cpp11_uint32,1000000000,2.468580
+build/cpp11_uint64,1000000000,2.951884
+build/gsl_c_ufloat64,1000000000,5.184034
+build/gsl_c_uint64,1000000000,4.346884
+build/sfmt_ufloat,1000000000,2.918012
+build/sfmt_ufloat_sse2,1000000000,3.080929
+build/sfmt_uint,1000000000,2.874565
+gsl_python_ufloat.py,1000000000,435.024847
+gsl_python_uint.py,1000000000,468.524520
+gsl_python_uniform.py,1000000000,478.324073
+random_python_ufloat.py,1000000000,144.907326
+random_python_uint.py,1000000000,162.753178
