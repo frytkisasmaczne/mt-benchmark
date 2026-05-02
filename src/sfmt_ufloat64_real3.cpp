@@ -19,10 +19,10 @@ int main() {
         volatile double x = sfmt_genrand_real3(&sfmt);
         (void)x;
         if ((i % report_interval) == 0) {
-            std::fprintf(stderr, "sfmt_ufloat_ss2: Progress: %llu/%llu\n", (unsigned long long)i, (unsigned long long)N);
+            std::fprintf(stderr, "sfmt_ufloat_sse2: Progress: %llu/%llu\n", (unsigned long long)i, (unsigned long long)N);
             std::fflush(stderr);
         }
     }
-    std::fprintf(stderr, "sfmt_ufloat_ss2: Progress: %llu/%llu (100%%)\n", (unsigned long long)N, (unsigned long long)N);
+    std::fprintf(stderr, "sfmt_ufloat_sse2: Progress: %llu/%llu (100%%)\n", (unsigned long long)N, (unsigned long long)N);
     return 0;
 }

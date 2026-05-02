@@ -5,7 +5,7 @@ N ?= 1000000000
 SRCDIR := src
 BINDIR := build
 CC := g++
-CFLAGS := -std=c++11 -O3 -DBENCH_N=$(N) -DSFMT_MEXP=19937
+CFLAGS := -std=c++11 -O0 -DBENCH_N=$(N) -DSFMT_MEXP=19937
 SFMT_DIR := SFMT
 SFMT_C := $(SFMT_DIR)/SFMT.c
 SFMT_INC := -I$(SFMT_DIR)
@@ -28,4 +28,4 @@ run: all
 	python3 plot_results.py
 
 clean:
-	rm -f $(PROGS) results.csv run.log
+	rm -f build/* results.csv run.log

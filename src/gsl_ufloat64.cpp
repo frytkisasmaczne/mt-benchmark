@@ -14,7 +14,6 @@ static const unsigned long long N = (unsigned long long)BENCH_N;
 int main() {
     gsl_rng *r = gsl_rng_alloc(gsl_rng_mt19937);
     gsl_rng_set(r, 1234);
-
     const unsigned long long report_interval = (N >= 10) ? (N / 10) : 1;
     for (unsigned long long i = 0; i < N; ++i) {
         volatile double x = gsl_rng_uniform(r);

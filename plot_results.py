@@ -26,30 +26,6 @@ def parse_args() -> argparse.Namespace:
         default="benchmark_chart.png",
         help="Output image path (default: benchmark_chart.png)",
     )
-    parser.add_argument(
-        "--title",
-        default="Porownanie wzglednej predkosci dla generacji 1e9 liczb",
-        help="Chart title",
-    )
-    parser.add_argument(
-        "--ylabel",
-        default="Wzgledny czas / najszybszy",
-        help="Y axis label",
-    )
-    parser.add_argument(
-        "--mode",
-        choices=["relative", "seconds"],
-        default="relative",
-        help=(
-            "Chart value mode: 'relative' plots elapsed_seconds normalized "
-            "to the fastest run (fastest=1), 'seconds' plots raw elapsed_seconds."
-        ),
-    )
-    parser.add_argument(
-        "--figsize",
-        default="12,5",
-        help="Figure size in inches as width,height (default: 12,5)",
-    )
 
     return parser.parse_args()
 
@@ -74,10 +50,6 @@ def read_results(csv_path: Path) -> tuple[str | None, list[dict[str, str]]]:
     return timestamp, rows
 
 
-def normalize_labels(labels: list[str]) -> list[str]:
-    return [label.replace("_", " ").replace(".py", "") for label in labels]
-
-
 def main() -> None:
     args = parse_args()
     csv_path = Path(args.csv_path)
@@ -90,26 +62,33 @@ def main() -> None:
     if not rows:
         raise ValueError("No benchmark rows found in CSV file.")
 
-    labels = normalize_labels([row["program"] for row in rows])
+    labels = [row["program"] for row in rows]
     elapsed = [float(row["elapsed_seconds"]) for row in rows]
 
-    if args.mode == "relative":
-        fastest = min(elapsed)
-        values = [value / fastest for value in elapsed]
-    else:
-        values = elapsed
+    fastest = min(elapsed)
+    values = [value / fastest for value in elapsed]
 
-    width_str, height_str = args.figsize.split(",", maxsplit=1)
-    fig_width = float(width_str.strip())
-    fig_height = float(height_str.strip())
-
-    plt.figure(figsize=(fig_width, fig_height))
-    plt.bar(labels, values, color="#5a9b1f", edgecolor="#4c841a", width=0.62)
-    plt.title(args.title)
-    plt.ylabel(args.ylabel)
+    plt.figure(figsize=(12, 5))
+    bars = plt.bar(labels, values, color="#5a9b1f", edgecolor="#4c841a", width=0.62)
+    plt.title("Porownanie wzglednej predkosci dla generacji 1e9 liczb")
+    plt.ylabel("Czas, wielokrotnosc najszybszego (sekundy)")
     plt.grid(axis="y", linestyle="-", linewidth=0.7, alpha=0.35)
     plt.gca().set_axisbelow(True)
     plt.xticks(rotation=45, ha="right")
+
+    # Add elapsed-seconds labels above each bar (show actual seconds measured)
+    max_val = max(values) if values else 0.0
+    offset = max_val * 0.01 if max_val > 0 else 0.01
+    for rect, secs, val in zip(bars, elapsed, values):
+        height = rect.get_height()
+        plt.text(
+            rect.get_x() + rect.get_width() / 2,
+            height + offset,
+            f"{val:.2f} ({float(secs):.1f}s)",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
 
     if timestamp:
         plt.figtext(0.99, 0.01, timestamp, ha="right", va="bottom", fontsize=9, alpha=0.7)

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Read BENCH_N from environment (Makefile sets it) or fallback to argument/env
-N=${BENCH_N:-${1:-1000000000}}
+# Read BENCH_N from environment (Makefile sets it)
+N=${BENCH_N:-1000000000}
 
 RESULTS_FILE="results.csv"
 # Write timestamp on its own line, then CSV header
@@ -40,7 +40,10 @@ for c in "${cmds[@]}"; do
   elapsed=$(awk "BEGIN{printf \"%.6f\", $end - $start}")
   printf "Elapsed Time (s): %s\n" "$elapsed"
   echo
-  printf "%s,%s,%.6f\n" "$c" "$N" "$elapsed" >> "$RESULTS_FILE"
+  # write only the filename without path or extension
+  name="$(basename "$c")"
+  name="${name%.*}"
+  printf "%s,%s,%.6f\n" "$name" "$N" "$elapsed" >> "$RESULTS_FILE"
 done
 
 echo "==============================="
